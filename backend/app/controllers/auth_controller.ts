@@ -55,6 +55,9 @@ export default class AuthController {
         .send({ message: 'Authentication Failed, please try again.', token: null, user: null })
     }
   }
+  public async authenticate(){
+
+  }
   public async logout({ auth, request, response }: HttpContext){
     const token = request.input('token')
     // Remove and invalidate token in mongoDB model

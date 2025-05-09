@@ -47,6 +47,7 @@ const router=useRouter();
 const email = ref('');
 const password = ref('');
 
+//sessionStorage.clear(); //-> clear all session in browser
 const login = async () =>{
   try{ //'http://localhost:5000/api/auth/login'
     const apiUrl=import.meta.env.VITE_API_URL+'/login';
@@ -55,8 +56,8 @@ const login = async () =>{
       password: password.value
     });
     // save token on storage
-    localStorage.setItem('token',res.data.token);
-    localStorage.setItem('user',JSON.stringify(res.data.user));
+    sessionStorage.setItem('token',res.data.token);
+    sessionStorage.setItem('auth_user',JSON.stringify(res.data.user));
     // redirect page to dashboard after successful verification
     await router.push('/dashboard');
   }catch(err){

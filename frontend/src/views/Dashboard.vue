@@ -19,14 +19,15 @@ import axios from "axios";
 import router from "../router/index.js";
 
 const message=ref('');
-const token =localStorage.getItem('token');
-
+const token =sessionStorage.getItem('token');
+console.log('token: ' + token)
 //computed property
-const isAuthenticated = computed(()=>!!localStorage.getItem('token'));
+const isAuthenticated = computed(()=>!!sessionStorage.getItem('token'));
 // Logout
 function logout(){
-  localStorage.removeItem('token');
-  router.push('/')
+  sessionStorage.removeItem('token');
+  sessionStorage.removeItem('auth_user');
+  router.push('/');
 }
 onMounted(async () =>{
   try{
@@ -35,6 +36,7 @@ onMounted(async () =>{
       headers: { Authorization: `Bearer ${token}`}
     });
     message.value=res.data.message;
+    console.log(res.data.message)
   }catch(err){
     message.value='Unauthorized';
   }
