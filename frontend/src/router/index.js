@@ -3,6 +3,7 @@ import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Dashboard from '../views/Dashboard.vue';
 import Posts from '../views/Posts.vue';
+import ViewPost from '../views/ViewPost.vue'
 import axios from "axios";
 
 const routes = [
@@ -30,6 +31,11 @@ const routes = [
         path: '/posts',
         name: 'Post',
         component: Posts
+    },
+    {
+        path: '/posts/view',
+        name: 'ViewPost',
+        component: ViewPost
     },
     {
         path: '/logout',

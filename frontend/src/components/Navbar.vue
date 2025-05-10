@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg light fixed-top py-3 fixed-top" id="mainNav">
+  <nav class="navbar navbar-expand-lg light fixed-top py-3 fixed-top navbar-light bg-light shadow-sm custom-navbar" id="mainNav">
     <div class="container px-4 px-lg-5">
       <a class="navbar-brand" href="#page-top">POST Blog</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
@@ -23,6 +23,22 @@
   </nav>
 
 </template>
+<style scoped>
+.custom-navbar .nav-link {
+  position: relative;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.custom-navbar .nav-link:hover {
+  background-color: #f0f0f0; /* Hover highlight */
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.6),
+  inset -1px -1px 2px rgba(0, 0, 0, 0.1); /* Embossed effect */
+  color: #000;
+}
+</style>
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import axios from "axios";

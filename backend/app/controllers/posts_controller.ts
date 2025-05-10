@@ -4,6 +4,7 @@ import Post from '../models/post.js'
 import mongoose from 'mongoose'
 import { HttpContext } from '@adonisjs/core/http'
 import JsonPlaceholderProvider from '../Services/json_placeholder_provider.js'
+import UserHelper from '../Services/user_helper.js'
 
 dotenv.config()
 
@@ -44,11 +45,38 @@ export default class PostsController {
       return { message: 'Failed to fetch posts.' }
     }
   }
+
+  /**
+   * @description View Post by postId
+   * @param params
+   * @param response
+   */
+  public async view({ request, response }: HttpContext) {
+    // get the email from request variable
+    const email = request.input('email')
+    // get the token passed as headers
+    const token = (request.header('Authorization') || '').replace('Bearer ', '')
+    // get the postId or shall
+    const postId = request.input('id')
+    // Verify token passed from header
+    const isValid = await UserHelper.verify(email, token)
+    if (isValid) {
+      // query now post record
+      const post = await JsonPlaceholderProvider.findPostByPostId(postId)
+      return post.data
+    } else {
+      return response.unauthorized({ success: false, message: 'Invalid token or user' })
+    }
+  }
+
+  /**
+   * @description Load post by UserId
+   * @param params
+   * @param response
+   */
   public async load_post({ params, response }: HttpContext) {
     // @ts-ignore
     const userId = params.id
-    // const mongoUri = process.env.MONGO_URI
-    //const resource = process.env.RESOURCE_URL
     // load the post from resource (https://jsonplaceholder.typicode.com/posts)
     const posts = await JsonPlaceholderProvider.findPostByUserId(userId)
     //return JSON

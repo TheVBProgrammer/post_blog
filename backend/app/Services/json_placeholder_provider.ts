@@ -17,10 +17,14 @@ export default class JsonPlaceholderProvider {
   public static async findPostByUserId(Id: Number) {
     // fetch all users from JSONPlaceholder Website
     // return data in JSON
-    const posts = await axios.get(resource + '/posts', {
+    // return the posts
+    return await axios.get(resource + '/posts', {
       params: { userId: Id },
     })
-
-    return posts
+  }
+  public static async findPostByPostId(postId: Number) {
+    return await axios.get(resource + '/posts', {
+      params: { id: postId },
+    })
   }
 }

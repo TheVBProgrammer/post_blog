@@ -55,7 +55,7 @@ onMounted(async () => {
     // create constant variable blogTable to avoid duplicate query selector
     const blogTable=$('#blogTable')
     if (blogTable.length > 0){
-    //  blogTable.DataTable()
+      blogTable.DataTable()
       clearInterval(interval)
     }
   })
