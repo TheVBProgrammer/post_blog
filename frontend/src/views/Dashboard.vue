@@ -15,12 +15,11 @@
 
 <script setup>
 import {computed, onMounted, ref} from "vue";
-import axios from "axios";
 import router from "../router/index.js";
 
+//sessionStorage.clear(); //-> clear all session in browser
 const message=ref('');
 const token =sessionStorage.getItem('token');
-console.log('token: ' + token)
 //computed property
 const isAuthenticated = computed(()=>!!sessionStorage.getItem('token'));
 // Logout
@@ -29,17 +28,8 @@ function logout(){
   sessionStorage.removeItem('auth_user');
   router.push('/');
 }
-onMounted(async () =>{
-  try{
-    const apiUrl=import.meta.env.VITE_API_URL;
-    const res =await axios.get(apiUrl+'/auth/dashboard',{
-      headers: { Authorization: `Bearer ${token}`}
-    });
-    message.value=res.data.message;
-    console.log(res.data.message)
-  }catch(err){
-    message.value='Unauthorized';
-  }
-});
-
+function CheckSession(){
+  const token =sessionStorage.getItem('token');
+  console.log('token: ' + token);
+}
 </script>

@@ -2,6 +2,8 @@ import axios from 'axios'
 import dotenv from 'dotenv'
 import Post from '../models/post.js'
 import mongoose from 'mongoose'
+import { HttpContext } from '@adonisjs/core/http'
+import JsonPlaceholderProvider from '../Services/json_placeholder_provider.js'
 
 dotenv.config()
 
@@ -41,6 +43,16 @@ export default class PostsController {
       console.error('Error Fetching posts: ', error)
       return { message: 'Failed to fetch posts.' }
     }
+  }
+  public async load_post({ params, response }: HttpContext) {
+    // @ts-ignore
+    const userId = params.id
+    // const mongoUri = process.env.MONGO_URI
+    //const resource = process.env.RESOURCE_URL
+    // load the post from resource (https://jsonplaceholder.typicode.com/posts)
+    const posts = await JsonPlaceholderProvider.findPostByUserId(userId)
+    //return JSON
+    response.send(posts.data)
   }
   private async CheckIfPostExists() {
     try {

@@ -3,12 +3,18 @@ import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Dashboard from '../views/Dashboard.vue';
 import Posts from '../views/Posts.vue';
+import axios from "axios";
 
 const routes = [
     {
         path: '/',
         name: 'Dashboard',
-        component: Dashboard
+        component: Dashboard,
+    },
+    {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: Dashboard,
     },
     {
         path: '/login',
@@ -28,7 +34,24 @@ const routes = [
     {
         path: '/logout',
         name: 'Logout',
-        component: Posts
+        beforeEnter: async (to, from, next) => {
+            const apiUrl = import.meta.env.VITE_API_URL + '/logout';
+            const token = sessionStorage.getItem('auth_user')
+            try {
+                if (token) {
+                    await axios.post(apiUrl, {}, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                }
+            } catch (error) {
+                console.error('Logout failed on server: ', error)
+            } finally {
+                sessionStorage.removeItem('auth_user') // Clear client token
+                next('/login') // redirect to log in page
+            }
+        }
     },
 ];
 

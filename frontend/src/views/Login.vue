@@ -49,18 +49,18 @@ const password = ref('');
 
 //sessionStorage.clear(); //-> clear all session in browser
 const login = async () =>{
-  try{ //'http://localhost:5000/api/auth/login'
+  try{ //'http://localhost:3333/login'
     const apiUrl=import.meta.env.VITE_API_URL+'/login';
     const res = await axios.post(apiUrl, {
       email: email.value,
       password: password.value
     });
-    // save token on storage
+    // save token on Session Storage Utility
     sessionStorage.setItem('token',res.data.token);
     sessionStorage.setItem('auth_user',JSON.stringify(res.data.user));
     // redirect page to dashboard after successful verification
     await router.push('/dashboard');
-  }catch(err){
+  }catch(err){ // Handle Error in case there is
     if (err.response && err.response.data && err.response.data.message) {
       alert('Login failed: ' + err.response.data.message);
     } else {

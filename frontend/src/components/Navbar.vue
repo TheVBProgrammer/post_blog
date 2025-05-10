@@ -12,7 +12,7 @@
             <router-link to="/posts" v-if="isLoggedIn" class="nav-link">Posts</router-link>
           </li>
           <li class="nav-item">
-            <button @click.prevent="logout" v-if="isLoggedIn" class="nav-link">Logout</button>
+            <button @click.prevent="logout" v-if="isLoggedIn" class="nav-link" :title="btnTitle">Logout</button>
           </li>
           <li class="nav-item">
             <router-link to="/login" v-if="!isLoggedIn" class="nav-link">Login</router-link>
@@ -27,24 +27,38 @@
 import { useRouter } from 'vue-router';
 import axios from "axios";
 import UserHelper from '../helper/UserHelper'
-const router=useRouter();
+import {onMounted, ref} from "vue";
 
+const router=useRouter();
 //check if login and save to a variable
 const isLoggedIn = UserHelper.isLogin()
+// Button title
+const btnTitle = ref('log Out')
+//change button title based on user
+function changeTitle() {
+  const user = UserHelper.authenticatedUser()
+  if (user) {
+    btnTitle.value = 'Logout ' + user.name
+  }
+}
+// Call change Title when component mounts
+onMounted(()=>{
+  changeTitle()
+})
+// Logout function
 async function logout() {
-  const token = localStorage.getItem('token')
-  console.log(token)
+  const token = sessionStorage.getItem('token')
   const apiUrl = import.meta.env.VITE_API_URL + '/logout';
-  console.log(apiUrl)
+  console.log(token)
   const res = await axios.post(apiUrl, {
     token: token,
   });
-  // remove auth data
-  localStorage.removeItem('token')
-  localStorage.removeItem('user')
+  console.log(res.data.message)
+  // remove auth data token
+  sessionStorage.removeItem('token')
+  // remove auth_user session
+  sessionStorage.removeItem('auth_user')
+  // redirect to login page
   await router.push('/login')
 }
 </script>
-<style scoped>
-
-</style>

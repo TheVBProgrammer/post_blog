@@ -44,27 +44,36 @@ export default class AuthController {
         return response
           .status(200)
           .send({ message: 'Login Successful.', token: token, user: authenticatedUser })
+      } else {
+        const authenticatedUser = await User.findOneAndUpdate(
+          { email: email }, // match by email
+          {
+            $set: {
+              token: token,
+            },
+          },
+          {
+            upsert: true, // ->create new if not found
+            new: true, // ->return teh updated document
+            setDefaultsOnInsert: true, //optional: apply schema defaults of inserting
+          }
+        )
+        // return message to capture via an api access
+        return response
+          .status(200)
+          .send({ message: 'Login Successful.', token: token, user: authenticatedUser })
       }
-      // Login already return success
-      return response
-        .status(200)
-        .send({ message: 'User already Login.', token: token, user: loggedUser })
     } catch (error) {
       return response
         .status(500)
         .send({ message: 'Authentication Failed, please try again.', token: null, user: null })
     }
   }
-  public async authenticate(){
-
-  }
-  public async logout({ auth, request, response }: HttpContext){
+  public async logout({ request, response }: HttpContext){
     const token = request.input('token')
     // Remove and invalidate token in mongoDB model
     await User.findOneAndUpdate({ token }, { token: null })
     // let system know of logging out
-    // @ts-ignore
-    await auth.use('web').logout()
     return response.ok({ message: 'Logged out successfully' })
   }
   public async profile({ request }: HttpContext) {
