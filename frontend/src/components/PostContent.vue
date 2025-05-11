@@ -1,7 +1,19 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import {onMounted, ref} from 'vue'
+import UserHelper from "../helper/UserHelper";
+import axios from "axios";
 
+// extract the api URL from .env file
+const apiUrl=import.meta.env.VITE_API_URL+'/post/view';
+onMounted( async () =>{
+  const user = UserHelper.authenticatedUser()
+  // call the backend url VITE_API_URL to load post from JSONPlaceholder
+  const res = await axios.post(apiUrl, {
+    email: user.email,
+    id: token
+  });
+})
 </script>
 
 <template>

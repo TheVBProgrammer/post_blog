@@ -1,7 +1,3 @@
-Thank you for taking the time and showing interest in our company.
-
-We'd greatly appreciate it if you could take our hands-on exam so we can better assess your skill level.
-
 Overview
 You are tasked with creating a simple web application that allows users to view, create, update, and delete posts. This application will consist of a backend built with Node.js and a frontend developed with Vue.js. 
 
