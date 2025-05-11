@@ -20,7 +20,8 @@ const AuthController = () => import('#controllers/auth_controller')
   }
 })*/
 router.get('/', [PostController, 'index'])
-router.get('/posts/:id', [PostController, 'load_post'])
+router.post('/posts', [PostController, 'load_post'])
+router.post('/posts/all', [PostController, 'postSynchronize'])
 router.post('/posts/view', [PostController, 'view'])
 router.get('/users', [UsersController, 'index'])
 router.post('/logout', [AuthController, 'logout'])

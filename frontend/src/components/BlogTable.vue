@@ -46,10 +46,13 @@ const apiUrl=import.meta.env.VITE_API_URL+'/posts';
 const user = UserHelper.authenticatedUser()
 
 onMounted(async () => {
-  // call the backend url VITE_API_URL to load post from JSONPlaceholder
-  const res = await axios.get(apiUrl + '/' + user.id);
+  // call the backend url VITE_API_URL to load post from local database ready for updating
+  const res = await axios.post(apiUrl,{
+    userId: user.id,
+    email: user.email
+  });
   // convert data into an array POSTS
-  posts.value = Array.isArray(res.data) ? res.data : [res.data] // Handle single object
+  posts.value = Array.isArray(res.data.posts) ? res.data.posts : [res.data.posts] // Handle single object
   // use DataTable.net table plugins
   const interval = setInterval(()=>{
     // create constant variable blogTable to avoid duplicate query selector

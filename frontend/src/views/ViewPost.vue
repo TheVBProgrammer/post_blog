@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import PostContent from "../components/PostContent.vue";
-import router from "../router/index";
+import { useRoute } from "vue-router";
 
-console.log(router.getRoutes())
+const route = useRoute()
+const pId = route.params.id
 </script>
 
 <template>
   <div class="container mt-5">
-    <PostContent />
+    <PostContent :postId="{ pId }" />
   </div>
 </template>
 

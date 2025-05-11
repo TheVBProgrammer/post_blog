@@ -12,6 +12,9 @@
             <router-link to="/posts" v-if="isLoggedIn" class="nav-link">Posts</router-link>
           </li>
           <li class="nav-item">
+            <router-link to="/posts/all" v-if="isLoggedIn" class="nav-link">Data Sync</router-link>
+          </li>
+          <li class="nav-item">
             <button @click.prevent="logout" v-if="isLoggedIn" class="nav-link" :title="btnTitle">Logout</button>
           </li>
           <li class="nav-item">

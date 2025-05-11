@@ -4,6 +4,7 @@ import Register from '../views/Register.vue';
 import Dashboard from '../views/Dashboard.vue';
 import Posts from '../views/Posts.vue';
 import ViewPost from '../views/ViewPost.vue'
+import SyncPost from '../views/Sync.vue'
 import axios from "axios";
 
 const routes = [
@@ -14,7 +15,7 @@ const routes = [
     },
     {
         path: '/dashboard',
-        name: 'Dashboard',
+        name: 'Dashboard2',
         component: Dashboard,
     },
     {
@@ -31,6 +32,11 @@ const routes = [
         path: '/posts',
         name: 'Post',
         component: Posts
+    },
+    {
+        path: '/posts/all',
+        name: 'PostAll',
+        component: SyncPost
     },
     {
         path: '/post/view/:id',
