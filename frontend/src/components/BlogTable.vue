@@ -37,7 +37,10 @@ import $ from 'jquery'
 import 'datatables.net-dt'
 import 'datatables.net-dt/css/dataTables.dataTables.css'
 import UserHelper from "../helper/UserHelper";
+import { useRouter } from 'vue-router';
 import axios from "axios";
+
+const router = useRouter();
 // setup a reactive variable POSTS
 const posts = ref([])
 // extract the api URL from .env file
@@ -63,7 +66,12 @@ onMounted(async () => {
     }
   })
 })
-
+function viewPost(Id){
+  router.push('/post/view/' + Id)
+}
+function editPost(Id) {
+  router.push('/post/edit/' + Id)
+}
 </script>
 
 <style scoped>

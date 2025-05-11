@@ -60,14 +60,17 @@ export default class PostsController {
     // Verify token passed from header
     const isValid = await UserHelper.verify(email, token)
     if (isValid) {
-      //query Post by userId or by its author
-      const post = await Post.findOne({ id: Number.parseInt(postId) })
-      return response.ok({
-        success: true,
-        message: 'Query of Posts Successfully done!',
-        post: post,
-      })
-
+      try {
+        //query Post by userId or by its author
+        const post = await Post.findOne({ id: Number.parseInt(postId) })
+        return response.ok({
+          success: true,
+          message: 'Query of Posts Successfully done!',
+          post: post,
+        })
+      } catch (err) {
+        return response.badRequest({ success: false, message: err.message })
+      }
     }
     return response.unauthorized({ success: false, message: 'Invalid token or email' })
   }
@@ -86,13 +89,19 @@ export default class PostsController {
     // Verify token passed from header
     const isValid = await UserHelper.verify(email, token)
     if (isValid) {
-      //query Post by userId or by its author
-      const posts = await Post.find({ userId: Number.parseInt(userId) })
-      return response.ok({
-        success: true,
-        message: 'Query of Posts Successfully done!',
-        posts: posts,
-      })
+      try {
+        //query Post by userId or by its author
+        const posts = await Post.find({ userId: Number.parseInt(userId) })
+        // send the result as successful
+        return response.ok({
+          success: true,
+          message: 'Query of Posts Successfully done!',
+          posts: posts,
+        })
+      } catch (err) {
+        // an Error occurred, notify the user
+        return response.badRequest({ success: false, message: err.message })
+      }
     }
     return response.unauthorized({ success: false, message: 'Invalid token or email' })
   }
@@ -104,6 +113,32 @@ export default class PostsController {
       return false
     }
   }
+  public async editPost({ request, response }: HttpContext) {
+    // get the email from request variable
+    const email = request.input('email')
+    //
+    const postId = request.input('postId')
+    // get the token passed as headers
+    const token = (request.header('Authorization') || '').replace('Bearer ', '')
+    // Verify token passed from header
+    const isValid = await UserHelper.verify(email, token)
+    if (isValid) {
+      try {
+        //
+        const row = await Post.find(postId)
+        return response.ok({
+          success: true,
+          message: 'The specified Posts Successfully done!',
+          post: row,
+        })
+      } catch (err) {
+        // an Error occurred, notify the user
+        return response.badRequest({ success: false, message: err.message })
+      }
+    } else {
+      return response.unauthorized({ success: false, message: 'Invalid token or email' })
+    }
+  }
   public async postSynchronize({ request, response }: HttpContext) {
     // get the email from request variable
     const email = request.input('email')
@@ -112,13 +147,18 @@ export default class PostsController {
     // Verify token passed from header
     const isValid = await UserHelper.verify(email, token)
     if (isValid) {
-      //Synchronize Post using UserHelper
-      const rows = await UserHelper.SynchronizePost()
-      return response.ok({
-        success: true,
-        message: 'Synchronization of Posts Successfully done!',
-        posts: rows,
-      })
+      try {
+        //Synchronize Post using UserHelper
+        const rows = await UserHelper.SynchronizePost()
+        return response.ok({
+          success: true,
+          message: 'Synchronization of Posts Successfully done!',
+          posts: rows,
+        })
+      } catch (err) {
+        // an Error occurred, notify the user
+        return response.badRequest({ success: false, message: err.message })
+      }
     } else {
       return response.unauthorized({ success: false, message: 'Invalid token or email' })
     }

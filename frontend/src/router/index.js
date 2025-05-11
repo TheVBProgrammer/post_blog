@@ -5,6 +5,7 @@ import Dashboard from '../views/Dashboard.vue';
 import Posts from '../views/Posts.vue';
 import ViewPost from '../views/ViewPost.vue'
 import SyncPost from '../views/Sync.vue'
+import EditPost from '../views/EditPost.vue'
 import axios from "axios";
 
 const routes = [
@@ -42,6 +43,11 @@ const routes = [
         path: '/post/view/:id',
         name: 'ViewPost',
         component: ViewPost
+    },
+    {
+        path: '/post/edit/:id',
+        name: 'EditPost',
+        component: EditPost
     },
     {
         path: '/logout',

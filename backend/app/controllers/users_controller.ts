@@ -2,6 +2,9 @@ import dotenv from 'dotenv'
 import User from '../mongoose/Models/users.js'
 import mongoose from 'mongoose'
 import axios from 'axios'
+import { HttpContext } from '@adonisjs/core/http'
+import UserHelper from '../Services/user_helper.js'
+import JsonPlaceholderProvider from '../Services/json_placeholder_provider.js'
 
 dotenv.config()
 
@@ -43,5 +46,32 @@ export default class UsersController {
     } catch (error) {
       return false
     }
+  }
+  public async getUser({ request, response }: HttpContext) {
+    // get the email from request variable
+    const email = request.input('email')
+    // get the postId from parameter
+    const userId = request.input('userId')
+    // get the token passed as headers
+    const token = (request.header('Authorization') || '').replace('Bearer ', '')
+    // Verify token passed from header
+    const isValid = await UserHelper.verify(email, token)
+    if (isValid) {
+      try {
+        //query Post by userId or by its author
+        const userData = await JsonPlaceholderProvider.findById(userId)
+        // return response success
+        return response.ok({
+          success: true,
+          message: 'Query of User Successfully done!',
+          user: userData,
+        })
+      } catch (err) {
+        // Failed return the system error message
+        return response.badRequest({ success: false, message: err.message })
+      }
+    }
+    // Failed on authorization access
+    return response.unauthorized({ success: false, message: 'Invalid token or email' })
   }
 }
