@@ -10,10 +10,13 @@ import axios from "axios";
 const posts = ref([])
 // extract the api URL from .env file
 const apiUrl=import.meta.env.VITE_API_URL+'/posts/all';
-
+/**
+ * @description Get all Post
+ */
 onMounted(async () => {
   // get the current logged user
   const user = UserHelper.authenticatedUser()
+  // get token from user sessionStorage
   const token = user.token
   // call the backend url VITE_API_URL to load post from mongoDB local Database
   const res = await axios.post(apiUrl,{

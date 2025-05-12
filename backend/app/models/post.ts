@@ -1,5 +1,8 @@
 import mongoose from 'mongoose'
 
+/**
+ * @description POST Model Schema
+ */
 const PostSchema = new mongoose.Schema(
   {
     userId: Number,

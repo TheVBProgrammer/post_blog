@@ -11,14 +11,11 @@ import router from '@adonisjs/core/services/router'
 const PostController = () => import('#controllers/posts_controller')
 const UsersController = () => import('#controllers/users_controller')
 const AuthController = () => import('#controllers/auth_controller')
-//const AuthMiddleware = () => import('#middleware/auth_middleware')
-//const GuestMiddleware = () => import('#middleware/guest_middleware')
 
-/*router.get('/', async () => {
-  return {
-    hello: 'world',
-  }
-})*/
+/*
+  Route created by Nolan Sunico
+  May 7, 2025 10:30 PM
+*/
 router.get('/', [PostController, 'index'])
 router.post('/posts', [PostController, 'load_post'])
 router

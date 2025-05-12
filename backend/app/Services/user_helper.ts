@@ -5,6 +5,9 @@ import axios from 'axios'
 import Posts from '../models/post.js'
 
 dotenv.config()
+/**
+ * @Description This is User Helper Class created by Eng'r Nolan Sunico
+ */
 export default class UserHelper {
   /**
    * @description Verify Access Token against session variable
@@ -21,6 +24,11 @@ export default class UserHelper {
       //return { errorNumber: 500, message: 'Server error during verification' }
     }
   }
+
+  /**
+   * @Description Synchronized Post from JSONPlaceholder for local MongoDB
+   * @constructor
+   */
   static async SynchronizePost() {
     const resUrl = process.env.RESOURCE_URL
     const MONGO_DB_NAME = process.env.MONGO_DB_NAME
@@ -50,6 +58,10 @@ export default class UserHelper {
     // now return it
     return Posts.find()
   }
+
+  /**
+   * @description Check if Post Collection does Exists
+   */
   static async doesPostCollectionExist(): Promise<boolean> {
     const MONGO_DB_NAME = process.env.MONGO_DB_NAME
     const mongoUri = process.env.MONGO_URI
@@ -62,6 +74,7 @@ export default class UserHelper {
     if (!db) {
       throw new Error('Database connection is not established.')
     }
+    // extracts collections from mongoDB No-SQL database
     const collection = await db.listCollections().toArray()
     // check for Posts Collection if exists
     return collection.some((col) => col.name === 'posts') // 'Posts' is the default name for Post model

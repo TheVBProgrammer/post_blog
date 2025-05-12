@@ -6,8 +6,11 @@ import { HttpContext } from '@adonisjs/core/http'
 import UserHelper from '../Services/user_helper.js'
 import JsonPlaceholderProvider from '../Services/json_placeholder_provider.js'
 
+// Enable process.env
 dotenv.config()
-
+/**
+ * @description User Controller
+ */
 export default class UsersController {
   public async index() {
     try {
@@ -32,21 +35,37 @@ export default class UsersController {
         // display that the record save successfully
         console.log('All users imported successfully!')
       } else {
+        // Table has been created
         return 'Users Table Created.'
       }
     } catch (error) {
+      // Handle Error
       console.error('Error Fetching users: ', error)
       return { message: 'Failed to fetch Users.' }
     }
   }
+
+  /**
+   * @description Check if user does exists
+   * @constructor
+   * @private
+   */
   private async CheckIfExists() {
     try {
+      //count number of documents in User Collections
       const count = await User.countDocuments()
+      // return boolean true/false
       return count > 0
     } catch (error) {
       return false
     }
   }
+
+  /**
+   * @description Get user account details
+   * @param request
+   * @param response
+   */
   public async getUser({ request, response }: HttpContext) {
     // get the email from request variable
     const email = request.input('email')

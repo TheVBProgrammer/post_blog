@@ -5,8 +5,8 @@ import mongoose from 'mongoose'
 import { HttpContext } from '@adonisjs/core/http'
 import UserHelper from '../Services/user_helper.js'
 
+// enable process.env
 dotenv.config()
-
 export default class PostsController {
   public async index() {
     try {
@@ -26,7 +26,7 @@ export default class PostsController {
         // assign data to posts variable
         const posts = response.data
         for (const postData of posts) {
-          // insert record to Posts
+          // insert record to Posts and Update
           await Post.updateOne(
             {
               userId: postData.userId,
@@ -40,6 +40,7 @@ export default class PostsController {
         }
       }
     } catch (error) {
+      // Handle Error and notify users
       console.error('Error Fetching posts: ', error)
       return { message: 'Failed to fetch posts.' }
     }
@@ -69,9 +70,11 @@ export default class PostsController {
           post: post,
         })
       } catch (err) {
+        // handle Error
         return response.badRequest({ success: false, message: err.message })
       }
     }
+    // handle Error
     return response.unauthorized({ success: false, message: 'Invalid token or email' })
   }
 
@@ -105,14 +108,29 @@ export default class PostsController {
     }
     return response.unauthorized({ success: false, message: 'Invalid token or email' })
   }
+
+  /**
+   * @description Check if Post exists or not
+   * @constructor
+   * @private
+   */
   private async CheckIfPostExists() {
     try {
+      // count documents in Post Collections
       const count = await Post.countDocuments()
+      // return boolean true/false
       return count > 0
     } catch (error) {
+      // on Error return false
       return false
     }
   }
+
+  /**
+   * @description Destroy or delete Post
+   * @param params
+   * @param response
+   */
   public async destroy({ params, response }: HttpContext) {
     // Query the Post model and filter by Id
     const post = await Post.findOne({ id: Number.parseInt(params.id) })
@@ -144,6 +162,12 @@ export default class PostsController {
       })
     }
   }
+
+  /**
+   * @description Store or Save Record to database
+   * @param request
+   * @param response
+   */
   public async store({ request, response }: HttpContext){
     try {
       // extract title, body and userId from request object
@@ -170,10 +194,17 @@ export default class PostsController {
       return response.status(500).json({
         ErrorNumber: 50001,
         Message: 'Server Error while Posting.',
-        data: null
+        data: null,
       })
     }
   }
+
+  /**
+   * @description Update record/Post
+   * @param params
+   * @param request
+   * @param response
+   */
   public async update({ params, request, response }: HttpContext) {
     try {
       // Get the id from params
@@ -186,16 +217,19 @@ export default class PostsController {
         { title, body, userId },
         { new: true }
       )
-      //
+      //if insert/Update fails
       if (!updatedPost) {
+        // return status 404 or not Found
         return response.status(404).json({ message: 'Post not Found' })
       }
+      // Return Success posting of data
       return response.json({
         ErrorNumber: 0,
         Message: 'Post updated Successfully',
         Data: updatedPost,
       })
     } catch (err) {
+      // handle Error on update Post
       return response.status(500).json({
         ErrorNumber: 500,
         message: 'Failed to update post.',
@@ -203,6 +237,12 @@ export default class PostsController {
       })
     }
   }
+
+  /**
+   * @description Edit Post Entry
+   * @param request
+   * @param response
+   */
   public async edit({ request, response }: HttpContext) {
     // get the email from request variable
     const email = request.input('email')
@@ -227,9 +267,16 @@ export default class PostsController {
         return response.badRequest({ success: false, message: err.message })
       }
     } else {
+      // Handle Error Unauthorized access
       return response.unauthorized({ success: false, message: 'Invalid token or email' })
     }
   }
+
+  /**
+   * @description Synchronize Post from JSONPlaceHolder to local database mongoDB to enable update/delete/add
+   * @param request
+   * @param response
+   */
   public async postSynchronize({ request, response }: HttpContext) {
     // get the email from request variable
     const email = request.input('email')
@@ -251,6 +298,7 @@ export default class PostsController {
         return response.badRequest({ success: false, message: err.message })
       }
     } else {
+      // Handle Error an unauthorized access
       return response.unauthorized({ success: false, message: 'Invalid token or email' })
     }
   }

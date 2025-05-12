@@ -5,7 +5,7 @@ dotenv.config()
 // get the resource JSONPlaceholder url from .env file
 const resource = process.env.RESOURCE_URL
 /**
- * AdonisJS Class created by: Eng'r Nolan F. Sunico
+ * @Description AdonisJS Class created by: Eng'r Nolan F. Sunico
  */
 export default class JsonPlaceholderProvider {
   /**

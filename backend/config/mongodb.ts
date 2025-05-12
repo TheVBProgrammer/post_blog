@@ -2,7 +2,6 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 
 dotenv.config() // this will allow to use process.env
-
 //get connection string from env
 const mongoUri = process.env.MONGO_URI
 // get the database name from .env

@@ -59,7 +59,8 @@ const login = async () =>{
     sessionStorage.setItem('token',res.data.token);
     sessionStorage.setItem('auth_user',JSON.stringify(res.data.user));
     // redirect page to dashboard after successful verification
-    await router.push('/dashboard');
+    //await router.push('/dashboard');
+    document.location='/dashboard'
   }catch(err){ // Handle Error in case there is
     if (err.response && err.response.data && err.response.data.message) {
       alert('Login failed: ' + err.response.data.message);
