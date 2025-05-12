@@ -50,7 +50,7 @@ export default class PostsController {
    * @param params
    * @param response
    */
-  public async view({ request, response }: HttpContext) {
+  public async show({ request, response }: HttpContext) {
     // get the email from request variable
     const email = request.input('email')
     // get the postId from parameter
@@ -113,13 +113,73 @@ export default class PostsController {
       return false
     }
   }
-  public async updatePost({ params, request, response }: HttpContext) {
+  public async destroy({ params, response }: HttpContext) {
+    // Query the Post model and filter by Id
+    const post = await Post.findOne({ id: Number.parseInt(params.id) })
+    // check for null post and return message to the user
+    if (!post) {
+      /*
+        Custom Error Code:
+        40401 = Post not Found
+        50001 = Server Error, Deletion Failed
+       */
+      return response.status(404).json({
+        ErrorNumber: 40401,
+        Message: 'Post not found',
+      })
+    }
+    try {
+      // now everything is ok, Post record found it's time to issue the delete statement
+      await post.deleteOne()
+      // return status to user
+      return response.ok({
+        ErrorNumber: 0,
+        Message: 'Post deleted successfully!',
+      })
+    } catch (err) {
+      // return status to user
+      return response.status(500).json({
+        ErrorNumber: 500,
+        message: err,
+      })
+    }
+  }
+  public async store({ request, response }: HttpContext){
+    try {
+      // extract title, body and userId from request object
+      const { title, body, userId } = request.only(['title', 'body', 'userId'])
+      // check Post for the last generated Id
+      const newPost = await Post.findOne().sort({ id: -1 }).exec()
+      // Increment id by 1
+      const newId = newPost ? newPost.id + 1 : 1
+      console.log({ title, body, userId, newId })
+      // create now the new POST entry
+      const post = await Post.create({
+        userId: userId,
+        id: newId,
+        title: title,
+        body: body,
+      })
+      // return status of saving
+      return response.created({
+        ErrorNumber: 0,
+        Message: 'Post created successfully!',
+        data: post,
+      })
+    } catch (err) {
+      return response.status(500).json({
+        ErrorNumber: 50001,
+        Message: 'Server Error while Posting.',
+        data: null
+      })
+    }
+  }
+  public async update({ params, request, response }: HttpContext) {
     try {
       // Get the id from params
       const { Id } = params
       // extract params from request
       const { title, body, userId } = request.only(['title', 'body', 'userId'])
-      console.log(title, body, userId)
       // Find and Update Using Mongoose Model POST
       const updatedPost = await Post.findOneAndUpdate(
         { id: Id },
@@ -143,7 +203,7 @@ export default class PostsController {
       })
     }
   }
-  public async editPost({ request, response }: HttpContext) {
+  public async edit({ request, response }: HttpContext) {
     // get the email from request variable
     const email = request.input('email')
     //

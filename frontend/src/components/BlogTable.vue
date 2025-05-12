@@ -20,7 +20,6 @@
               <td>
                 <button class="btn btn-info btn-sm mb-1" @click="viewPost(post.id)">View</button>
                 <button class="btn btn-warning btn-sm mb-1" @click="editPost(post.id)">Edit</button>
-                <button class="btn btn-danger btn-sm" @click="deletePost(post.id)">Delete</button>
               </td>
             </tr>
             </tbody>

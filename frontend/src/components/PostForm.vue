@@ -56,6 +56,28 @@ const SubmitForm = async () => {
     alert('Failed to update post.')
   }
 }
+const deletePost = async () => {
+  const pId = props.postId
+  const confirmed = confirm('Are you sure you want to delete this post?')
+  if (confirmed) {
+    try {
+      let Url = apiUrl + '/post/delete/' + pId;
+      const res = await axios.delete(Url)
+      if (res.data.ErrorNumber===0) {
+        // NO error on deletion return by API
+        alert(res.data.Message)
+        // navigate to the POST List
+        await router.push('/posts')
+      }else{ // has error return
+        console.log(res)
+        alert(res.data.Message)
+      }
+    } catch(err) {
+      console.log('System Error: ' + err)
+      alert('Failed to delete post!')
+    }
+  }
+}
 //
 watch(() => props.postId, fetchPost, { immediate: true})
 
@@ -78,9 +100,12 @@ watch(() => props.postId, fetchPost, { immediate: true})
             <textarea class="form-control overflow-y-auto" rows="8" v-model="post.body"></textarea>
           </div>
         </div>
-        <div class="row mt-1">
+        <div class="row mt-2">
           <div class="col-md-12 text-end">
-            <button class="btn btn-success btn-sm" type="submit"><i class="bi bi-save"></i> Update</button>
+            <router-link class="btn btn-outline-primary btn-sm" to="/post/new"><i class="bi-arrow-return-left"></i> Add New Post</router-link>
+            <button class="btn btn-outline-danger btn-sm me-1 ms-1" @click="deletePost" type="button"><i class="bi bi-trash-fill"></i> Delete</button>
+            <button class="btn btn-outline-success btn-sm me-1" type="submit"><i class="bi bi-save"></i> Update</button>
+            <router-link class="btn btn-outline-info btn-sm" to="/posts"><i class="bi-arrow-return-left"></i> Go Back</router-link>
           </div>
         </div>
       </form>
