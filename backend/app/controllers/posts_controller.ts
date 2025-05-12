@@ -113,6 +113,36 @@ export default class PostsController {
       return false
     }
   }
+  public async updatePost({ params, request, response }: HttpContext) {
+    try {
+      // Get the id from params
+      const { Id } = params
+      // extract params from request
+      const { title, body, userId } = request.only(['title', 'body', 'userId'])
+      console.log(title, body, userId)
+      // Find and Update Using Mongoose Model POST
+      const updatedPost = await Post.findOneAndUpdate(
+        { id: Id },
+        { title, body, userId },
+        { new: true }
+      )
+      //
+      if (!updatedPost) {
+        return response.status(404).json({ message: 'Post not Found' })
+      }
+      return response.json({
+        ErrorNumber: 0,
+        Message: 'Post updated Successfully',
+        Data: updatedPost,
+      })
+    } catch (err) {
+      return response.status(500).json({
+        ErrorNumber: 500,
+        message: 'Failed to update post.',
+        Data: null,
+      })
+    }
+  }
   public async editPost({ request, response }: HttpContext) {
     // get the email from request variable
     const email = request.input('email')
@@ -124,8 +154,9 @@ export default class PostsController {
     const isValid = await UserHelper.verify(email, token)
     if (isValid) {
       try {
-        //
-        const row = await Post.find(postId)
+        // search Post by postId
+        const row = await Post.findOne({ id: Number.parseInt(postId) })
+        // Return as response OK passing row as post json
         return response.ok({
           success: true,
           message: 'The specified Posts Successfully done!',
