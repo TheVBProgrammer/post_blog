@@ -34,5 +34,3 @@ Functionality: The application meets the described functionalities.
 Code Quality: Code is well-organized, commented, and follows best practices.
 Error Handling: The application gracefully handles and displays errors.
 UI/UX: The application is user-friendly and visually appealing.
-
-Although there is no time limit, if you can do it 1-2 weeks time that would be great.
